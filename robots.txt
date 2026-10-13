@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://brunomulik24-prog.github.io/priyabeauty/sitemap.xml
