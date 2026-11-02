@@ -423,6 +423,12 @@ div.acc{display:grid;gap:10px}
   .map{height:360px;margin-top:48px}
   .svc-cat{grid-template-columns:300px 1fr;gap:28px}
   .svc-cat-hd{display:block;position:sticky;top:116px}
+  /* one locked left card for the whole menu; it switches as each list scrolls in */
+  .js #svcGroups{display:grid;grid-template-columns:300px 1fr;column-gap:28px;align-items:start}
+  .js #svcGroups .svc-cat{display:contents}
+  .js #svcGroups .svc-cat-hd{grid-column:1;grid-row:1/span 4;transition:opacity .35s var(--ease),visibility .35s}
+  .js #svcGroups .svc-cat-hd:not(.cur){opacity:0;visibility:hidden}
+  .js #svcGroups .acc{grid-column:2;margin-bottom:28px}
   .svc-cat-hd img{height:auto;aspect-ratio:4/3}
   .svc-cat-tx{padding:20px 24px 24px}
   .svc-cat-tx h2{font-size:30px;line-height:36px}
