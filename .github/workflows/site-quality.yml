@@ -15,8 +15,13 @@ jobs:
         with:
           node-version: 22
       - run: npx -y @lhci/cli@0.15.1 autorun --config=.github/lighthouserc.json
+      - name: Scores
+        if: always()
+        run: |
+          node -e 'for (const f of require("fs").readdirSync(".lighthouseci").filter(f => /^lhr-.*\.json$/.test(f))) { const r = require("./.lighthouseci/" + f); const s = Object.entries(r.categories).map(([k, v]) => k + " " + Math.round(v.score * 100)).join(", "); console.log("SCORES " + new URL(r.finalUrl).pathname + ": " + s) }'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: lighthouse-report
           path: .lighthouseci
+          include-hidden-files: true
