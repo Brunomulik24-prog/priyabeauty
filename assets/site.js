@@ -134,7 +134,12 @@ document.documentElement.classList.add('js');
   function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
   function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
   function waLink(msg){return 'https://wa.me/'+WA+'?text='+encodeURIComponent(msg)}
-  function istNow(){var d=new Date();return new Date(d.getTime()+(d.getTimezoneOffset()+330)*60000)}
+  function istNow(){
+    var d=new Date();
+    try{ var p={}; new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',year:'numeric',month:'numeric',day:'numeric',hour:'numeric',minute:'numeric',hourCycle:'h23'}).formatToParts(d).forEach(function(x){p[x.type]=+x.value});
+      return new Date(p.year,p.month-1,p.day,p.hour,p.minute); }
+    catch(_){ return new Date(d.getTime()+(d.getTimezoneOffset()+330)*60000) }
+  }
 
   /* ---------- whatsapp links ---------- */
   function wireWA(root){
@@ -273,8 +278,9 @@ document.documentElement.classList.add('js');
     });
   }
   function showLb(){var p=GALLERY[lbI]; setResponsiveImage($('#lbImg'),'images/'+p[0],'100vw'); $('#lbImg').alt=p[1]; $('#lbCap').textContent=p[1]+'  ('+(lbI+1)+'/'+GALLERY.length+')'}
-  function openLb(i){lbI=i; showLb(); $('#lb').classList.add('open'); document.body.style.overflow='hidden'; $('#lbClose').focus()}
-  function closeLb(){$('#lb').classList.remove('open'); document.body.style.overflow=''}
+  var lbOpener=null;
+  function openLb(i){lbI=i; lbOpener=document.activeElement; showLb(); $('#lb').classList.add('open'); document.body.style.overflow='hidden'; $('#lbClose').focus()}
+  function closeLb(){$('#lb').classList.remove('open'); document.body.style.overflow=''; if(lbOpener&&lbOpener.focus) lbOpener.focus(); lbOpener=null}
   function stepLb(d){lbI=(lbI+d+GALLERY.length)%GALLERY.length; showLb()}
 
   /* ---------- booking form ---------- */
@@ -283,19 +289,33 @@ document.documentElement.classList.add('js');
     d.min=iso(t); var tm=new Date(t); tm.setDate(tm.getDate()+1); d.value=iso(tm);
     var ts=$('#f-time'); ts.appendChild(new Option('Any time',''));
     for(var h=OPEN_H;h<CLOSE_H;h++){ts.appendChild(new Option(fmt(h),fmt(h))); ts.appendChild(new Option(fmt(h).replace(' ',':30 '),fmt(h).replace(' ',':30 ')))}
+    function slotH(v){var m=/^(\d+)(?::(\d+))? (am|pm)$/.exec(v); return m?(+m[1]%12)+(m[3]==='pm'?12:0)+(m[2]?+m[2]/60:0):null}
+    function nowH(){var n=istNow(); return n.getHours()+n.getMinutes()/60}
+    function earliest(){var n=istNow(); if(nowH()>=CLOSE_H-.5) n.setDate(n.getDate()+1); return iso(n)}
+    function syncTimes(){
+      var today=d.value===iso(istNow()), h=nowH();
+      Array.prototype.forEach.call(ts.options,function(o){ if(o.value) o.disabled=today&&slotH(o.value)<=h });
+      if(ts.selectedOptions[0]&&ts.selectedOptions[0].disabled) ts.value='';
+    }
+    d.min=earliest(); d.addEventListener('change',syncTimes); syncTimes();
+    var sendBtn=$('#bookForm [type=submit]'), busy=false;
     $('#bookForm').addEventListener('submit',function(e){
       e.preventDefault();
       var name=$('#f-name').value.trim(), ph=$('#f-phone').value.replace(/[^\d+]/g,''), svc=$('#f-svc').value, dt=$('#f-date').value, tmv=$('#f-time').value, note=$('#f-note').value.trim();
       var err=$('#f-err');
       if(!name){err.textContent='Please add your name.';$('#f-name').focus();return}
-      if(!/^(?:\+?91)?[6-9]\d{9}$/.test(ph)){err.textContent='Please add a valid 10-digit phone number.';$('#f-phone').focus();return}
+      if(!/^(?:\+?91|0)?[6-9]\d{9}$/.test(ph)){err.textContent='Please add a valid 10-digit phone number.';$('#f-phone').focus();return}
       if(!svc){err.textContent='Please choose a service.';$('#f-svc').focus();return}
       if(!dt){err.textContent='Please pick a date.';$('#f-date').focus();return}
-      d.min=iso(istNow());
+      d.min=earliest(); syncTimes();
+      if(dt===iso(istNow())&&dt<d.min){err.textContent='We are closed for today. Please choose tomorrow or a later date.';$('#f-date').focus();return}
+      if(dt===iso(istNow())&&tmv&&slotH(tmv)<=nowH()){err.textContent='That time has already passed today. Please pick a later time or another day.';$('#f-time').focus();return}
       if(dt<d.min){err.textContent='Please choose today or a future date.';$('#f-date').focus();return}
       err.textContent='';
       var nice=new Date(dt+'T00:00:00').toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
       var msg='Hello Priya Beauty!\n\nAppointment request\nName: '+name+'\nPhone: '+ph+'\nService: '+svc+'\nDate: '+nice+'\nTime: '+(tmv||'Any time')+(note?'\nNote: '+note:'')+'\n\nPlease confirm my slot. Thank you!';
+      if(busy) return; busy=true; if(sendBtn) sendBtn.disabled=true;
+      setTimeout(function(){busy=false; if(sendBtn) sendBtn.disabled=false},3000);
       measureEnquiry('whatsapp_click','booking_form');
       window.open(waLink(msg),'_blank','noopener');
     });
@@ -355,14 +375,21 @@ document.documentElement.classList.add('js');
   function past(){var p=!document.body.classList.contains('on-home')||window.scrollY>window.innerHeight*0.7; document.body.classList.toggle('past-hero',p); $('#nav').classList.toggle('solid',window.scrollY>30)}
   window.addEventListener('scroll',past,{passive:true}); window.addEventListener('hashchange',function(){setTimeout(past,0)}); setTimeout(past,0);
   $('#askFab').addEventListener('click',function(){var o=$('#askPanel').classList.toggle('open');this.setAttribute('aria-expanded',o)});
-  document.addEventListener('click',function(e){if(!e.target.closest('#askPanel,#askFab'))$('#askPanel').classList.remove('open')});
+  function closeAsk(){$('#askPanel').classList.remove('open'); $('#askFab').setAttribute('aria-expanded','false')}
+  document.addEventListener('click',function(e){if(!e.target.closest('#askPanel,#askFab'))closeAsk()});
   $('#lbClose').addEventListener('click',closeLb);
   $('#lbPrev').addEventListener('click',function(){stepLb(-1)});
   $('#lbNext').addEventListener('click',function(){stepLb(1)});
   $('#lb').addEventListener('click',function(e){if(e.target===this)closeLb()});
+  (function(){ var x0=null, y0=0, lb=$('#lb');
+    lb.addEventListener('touchstart',function(e){x0=e.touches[0].clientX; y0=e.touches[0].clientY},{passive:true});
+    lb.addEventListener('touchend',function(e){ if(x0===null) return; var dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0; x0=null;
+      if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)) stepLb(dx<0?1:-1) },{passive:true});
+  })();
   document.addEventListener('keydown',function(e){
-    if($('#lb').classList.contains('open')){if(e.key==='Escape')closeLb();if(e.key==='ArrowLeft')stepLb(-1);if(e.key==='ArrowRight')stepLb(1)}
-    else if(e.key==='Escape'){closeDrawer();$('#askPanel').classList.remove('open')}
+    if($('#lb').classList.contains('open')){if(e.key==='Escape')closeLb();if(e.key==='ArrowLeft')stepLb(-1);if(e.key==='ArrowRight')stepLb(1);
+      if(e.key==='Tab'){var f=$$('#lb button'), k=f.indexOf(document.activeElement); e.preventDefault(); f[(k+(e.shiftKey?-1:1)+f.length)%f.length].focus()}}
+    else if(e.key==='Escape'){closeDrawer();closeAsk()}
   });
 
 

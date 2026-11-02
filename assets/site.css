@@ -75,7 +75,7 @@ svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.2;stro
 .nav-r{display:flex;align-items:center;gap:12px}
 .nav .book{display:none;height:44px;padding:0 22px;font-size:14px}
 .burger{width:44px;height:44px;display:grid;place-items:center;margin-right:-10px;color:var(--txt)}
-.drawer{position:fixed;inset:0;z-index:60;background:var(--ink);display:flex;flex-direction:column;padding:12px 24px 32px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .35s var(--ease),transform .35s var(--ease),visibility 0s .35s}
+.drawer{position:fixed;inset:0;z-index:60;overflow-y:auto;overscroll-behavior:contain;background:var(--ink);display:flex;flex-direction:column;padding:12px 24px 32px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .35s var(--ease),transform .35s var(--ease),visibility 0s .35s}
 .drawer.open{opacity:1;visibility:visible;transform:none;transition:opacity .35s var(--ease),transform .35s var(--ease)}
 .drawer-top{display:flex;justify-content:space-between;align-items:center;height:52px}
 .drawer nav{display:flex;flex-direction:column;margin-top:32px}
@@ -283,7 +283,8 @@ div.acc{display:grid;gap:10px}
 .course ul{list-style:none;margin-top:10px;display:grid;gap:6px}
 .course li{font-size:13px;line-height:20px;color:var(--txt2);padding-left:14px;position:relative}
 .course li::before{content:"";position:absolute;left:0;top:.6em;width:4px;height:4px;border-radius:50%;background:var(--pink2)}
-.course .btn{width:100%;margin-top:16px}
+.courses>*{min-width:0}
+.course .btn{width:100%;margin-top:16px;white-space:normal;text-align:center}
 
 .gal{columns:1;column-gap:16px}
 .gal button{display:block;width:100%;margin-bottom:16px;border-radius:var(--r);overflow:hidden;position:relative;break-inside:avoid}
@@ -295,7 +296,7 @@ div.acc{display:grid;gap:10px}
 .lb img{max-width:min(1100px,100%);max-height:78vh;border-radius:12px;object-fit:contain}
 .lb p{font-size:13px;color:var(--txt2)}
 .lb .x{position:absolute;top:16px;right:24px}
-.lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid var(--line);font-size:22px;background:rgba(0,0,0,.4);display:none}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid var(--line);font-size:22px;background:rgba(0,0,0,.4);display:block}
 .lb-prev{left:16px}.lb-next{right:16px}
 
 .contact{display:grid;grid-template-columns:1fr;gap:40px;align-items:start}
