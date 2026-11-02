@@ -211,24 +211,13 @@ document.documentElement.classList.add('js');
     $$('#svcTabs .tab').forEach(function(b){b.addEventListener('click',function(){filterSvc(b.dataset.c)})});
     $$('#svcGroups details').forEach(function(d){d.addEventListener('toggle',function(){
       if(d.open) $$('#svcGroups details[open]').forEach(function(o){if(o!==d)o.open=false});
-      pickSvcCard();
     })});
-    var q=false; window.addEventListener('scroll',function(){ if(q) return; q=true; requestAnimationFrame(function(){q=false; pickSvcCard()}) },{passive:true});
-    window.addEventListener('resize',pickSvcCard); pickSvcCard();
-  }
-  // desktop: the locked left card shows the category whose list is in view
-  function pickSvcCard(){
-    var cats=$$('#svcGroups .svc-cat').filter(function(g){return g.style.display!=='none'}); if(!cats.length) return;
-    var cur=cats[0], best=-1, top=116, bot=window.innerHeight;
-    cats.forEach(function(g){var a=$('.acc',g); if(!a) return; var r=a.getBoundingClientRect(), v=Math.min(r.bottom,bot)-Math.max(r.top,top); if(v>best+1){best=v; cur=g}});
-    $$('#svcGroups .svc-cat-hd').forEach(function(h){h.classList.toggle('cur',h.parentNode===cur)});
   }
   function filterSvc(c){
     $$('#svcTabs .tab').forEach(function(b){var on=b.dataset.c===c; b.classList.toggle('on',on); b.setAttribute('aria-selected',on)});
     $$('#svcGroups .svc-cat').forEach(function(g){g.style.display=(c==='all'||g.dataset.c===c)?'':'none'});
     $$('#svcGroups details[open]').forEach(function(o){o.open=false});
     if(c!=='all'){ var f=$('#svcGroups .svc-cat[data-c="'+c+'"] details'); if(f) f.open=true; }
-    pickSvcCard();
   }
 
   /* ---------- courses ---------- */
