@@ -422,7 +422,7 @@ div.acc{display:grid;gap:10px}
   .form{padding:32px}
   .map{height:360px;margin-top:48px}
   .svc-cat{grid-template-columns:300px 1fr;gap:28px}
-  .svc-cat-hd{display:block;position:sticky;top:116px}
+  .svc-cat-hd{display:block}
   .svc-cat-hd img{height:auto;aspect-ratio:4/3}
   .svc-cat-tx{padding:20px 24px 24px}
   .svc-cat-tx h2{font-size:30px;line-height:36px}
