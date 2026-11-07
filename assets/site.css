@@ -141,6 +141,9 @@ svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.2;stro
 .card h3{font-size:15px;line-height:22px;font-weight:600;margin-top:16px}
 .card p{font-size:13px;line-height:20px;color:var(--txt3)}
 .after-btn{margin-top:32px}
+.popular{margin-top:24px;font-size:14px;line-height:24px;color:var(--txt2)}
+.popular a{color:var(--pink2);text-decoration:underline;text-underline-offset:3px}
+.popular a:hover{color:var(--txt)}
 
 /* our work (shows only once photos exist) */
 .collage{display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:170px;gap:12px;margin-top:32px}
