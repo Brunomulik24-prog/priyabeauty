@@ -4,7 +4,7 @@
    ========================================================= */
 :root{
   --ink:#0d0c0d; --ink2:#161416; --ink3:#1f1c1e; --stone:#2b2829;
-  --txt:#f6f1ee; --txt2:rgba(246,241,238,.68); --txt3:rgba(246,241,238,.45);
+  --txt:#f6f1ee; --txt2:rgba(246,241,238,.68); --txt3:rgba(246,241,238,.5);
   --line:rgba(246,241,238,.10); --line2:rgba(246,241,238,.24);
   --pink:#e6007e; --pink2:#f0559f; --pink-soft:rgba(240,85,159,.10);
   --wa:#25d366;
@@ -267,7 +267,7 @@ div.acc{display:grid;gap:10px}
 .steps{display:grid;grid-template-columns:1fr;gap:16px;margin-top:32px}
 .step{background:var(--ink);border:1px solid var(--line);border-radius:var(--r);padding:24px}
 .step i{font-style:normal;font-family:var(--sans);font-weight:600;font-size:32px;color:var(--pink2)}
-.step h4{font-size:15px;font-weight:600;margin:8px 0 4px}
+.step h3{font-size:15px;font-weight:600;margin:8px 0 4px}
 .step p{font-size:13px;line-height:20px;color:var(--txt2)}
 
 .courses{display:grid;grid-template-columns:1fr;gap:20px;align-items:start}
@@ -318,7 +318,7 @@ div.acc{display:grid;gap:10px}
 .hours td:last-child{text-align:right}
 .hours tr.today td{color:var(--txt);font-weight:600}
 .form{background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);padding:24px}
-.form h3{font-family:var(--sans);font-weight:600;letter-spacing:-.02em;font-size:26px;line-height:32px}
+.form h2{font-family:var(--sans);font-weight:600;letter-spacing:-.02em;font-size:26px;line-height:32px}
 .form > p{font-size:13px;color:var(--txt2);margin:4px 0 20px}
 .fg{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
 .fr{display:grid;grid-template-columns:1fr;gap:0 12px}

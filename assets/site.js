@@ -272,7 +272,7 @@ document.documentElement.classList.add('js');
     var g=$('#gal'); if(!g || g.children.length) return;
     GALLERY.forEach(function(p,i){
       var b=el('button'); b.setAttribute('aria-label','Open photo: '+p[1]);
-      var im=el('img'); setResponsiveImage(im,'images/'+p[0],'(min-width: 900px) 400px, calc(100vw - 48px)'); im.alt=p[1]; im.loading='lazy';
+      var im=el('img'); setResponsiveImage(im,'images/'+p[0],'(min-width: 900px) 400px, calc(100vw - 48px)'); im.alt=''; im.loading='lazy';
       b.appendChild(im); b.appendChild(el('span',null,p[1]));
       b.addEventListener('click',function(){openLb(i)}); g.appendChild(b);
     });
